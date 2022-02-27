@@ -43,10 +43,22 @@ void count(int n, float (*A)[n], float t, int* out) {
   *out = count;
 }
 
+/* Count CPU time in sec */
+float getTime(clock_t i1, clock_t i2) {
+  float t1 = (i2 - i1) / (float)CLOCKS_PER_SEC;
+  return t1;
+}
+
 int main() {
   /* Padding for printf */
   int pad1 = -40;
   int pad2 = 15;
+  int pad3 = -20;
+  int pad4 = 10;
+
+  /* Timing variables */
+  clock_t i1, i2;
+  float t1, t2, t3, t4, t5, t6;
 
   float a = 0.05;
   float b = 0.1;
@@ -58,13 +70,35 @@ int main() {
   int countX, countY = 0;
 
   // Allocate x and y to nxn
+  i1 = clock();
   float (*x)[n] = malloc(sizeof(*x) * n);
-  float (*y)[n] = malloc(sizeof(*y) * n);
+  i2 = clock();
+  t1 = getTime(i1, i2);
 
+  i1 = clock();
+  float (*y)[n] = malloc(sizeof(*y) * n);
+  i2 = clock();
+  t2 = getTime(i1, i2);
+
+  i1 = clock();
   initialize(n, x);
+  i2 = clock();
+  t3 = getTime(i1, i2);
+
+  i1 = clock();
   smooth(n, x, y, a, b, c);
+  i2 = clock();
+  t4 = getTime(i1, i2);
+
+  i1 = clock();
   count(n, x, t, &countX);
+  i2 = clock();
+  t5 = getTime(i1, i2);
+
+  i1 = clock();
   count(n, y, t, &countY);
+  i2 = clock();
+  t6 = getTime(i1, i2);
 
   int elems = n*n;
   int inner_elems = (n-2)*(n-2);
@@ -86,6 +120,17 @@ int main() {
   printf("%*s :: %*.5e\n", pad1, "Fraction of elements below threshold (X)", pad2, fracX);
   printf("%*s :: %*d\n", pad1, "Number of elements below threshold (Y)", pad2, countY);
   printf("%*s :: %*.5e\n", pad1, "Fraction of elements below threshold (Y)", pad2, fracY);
+
+  printf("\n");
+
+  printf("Action\n");
+  printf("------\n");
+  printf("%*s :: %*.3f\n", pad3, "CPU: Alloc-X", pad4, t1);
+  printf("%*s :: %*.3f\n", pad3, "CPU: Alloc-Y", pad4, t2);
+  printf("%*s :: %*.3f\n", pad3, "CPU: Init-X", pad4, t3);
+  printf("%*s :: %*.3f\n", pad3, "CPU: Smooth", pad4, t4);
+  printf("%*s :: %*.3f\n", pad3, "CPU: Count-X", pad4, t5);
+  printf("%*s :: %*.3f\n", pad3, "CPU: Count-Y", pad4, t6);
 
   return 0;
 
