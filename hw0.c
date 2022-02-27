@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <math.h>
 
 void initialize(int n, float (*arr)[n]) {
   for (int i = 0; i < n; i++) {
@@ -43,12 +44,16 @@ void count(int n, float (*A)[n], float t, int* out) {
 }
 
 int main() {
+  /* Padding for printf */
+  int pad1 = -40;
+  int pad2 = 15;
+
   float a = 0.05;
   float b = 0.1;
   float c = 0.4;
   float t = 0.1;
-  //int n = 16384 + 2;
-  int n = 5;
+  int n = 16384 + 2;
+  //int n = 5;
 
   int countX, countY = 0;
 
@@ -61,7 +66,26 @@ int main() {
   count(n, x, t, &countX);
   count(n, y, t, &countY);
 
-  //printArray(n, x);
+  int elems = n*n;
+  int inner_elems = (n-2)*(n-2);
+  float fracX = countX / (double)inner_elems;
+  float fracY = countY / (double)inner_elems;
+  float arrSize = elems * 4.0 * 1e-9;
+
+  /* Print info */
+  printf("Summary\n");
+  printf("-------\n");
+  printf("%*s :: %*d\n", pad1, "Number of elements in a row/column", pad2, n);
+  printf("%*s :: %*d\n", pad1, "Number of inner elements in a row/column", pad2, n-2);
+  printf("%*s :: %*d\n", pad1, "Total number of elements", pad2, n*n);
+  printf("%*s :: %*d\n", pad1, "Total number of inner elements", pad2, (n-2)*(n-2));
+  printf("%*s :: %*.5f\n", pad1, "Memory (GB) used per array", pad2, arrSize);
+  printf("%*s :: %*.2f\n", pad1, "Threshold", pad2, t);
+  printf("%*s :: %.2f %.2f %.2f\n", pad1, "Smoothing constants (a,b,c)",a,b,c);
+  printf("%*s :: %*d\n", pad1, "Number of elements below threshold (X)", pad2, countX);
+  printf("%*s :: %*.5e\n", pad1, "Fraction of elements below threshold (X)", pad2, fracX);
+  printf("%*s :: %*d\n", pad1, "Number of elements below threshold (Y)", pad2, countY);
+  printf("%*s :: %*.5e\n", pad1, "Fraction of elements below threshold (Y)", pad2, fracY);
 
   return 0;
 
