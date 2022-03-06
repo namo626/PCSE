@@ -40,6 +40,7 @@ void smooth(int n, float (*A)[n], float (*B)[n], float a, float b, float c) {
 void count(int n, float (*A)[n], float t, int* out) {
   int count = 0;
 
+#pragma omp parallel for reduction(+:count)
   for (int i = 1; i < n-1; i++) {
     for (int j = 1; j < n-1; j++) {
       if (A[i][j] < t) {
