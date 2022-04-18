@@ -60,12 +60,13 @@ int main() {
   clock_t i1, i2;
   float t1, t2, t3, t4, t5, t6;
 
-  float a = 0.05;
+  //float a = 0.05;
+  float a = 0;
   float b = 0.1;
   float c = 0.4;
   float t = 0.1;
-  int n = 16384 + 2;
-  //int n = 5;
+  //int n = 16384 + 2;
+  int n = 6000;
 
   int countX, countY = 0;
 
